@@ -1,14 +1,16 @@
-import { Box, Button, Group, LoadingOverlay, Paper, Stack, TextInput } from '@mantine/core'
+import { Box, Button, Group, LoadingOverlay, Paper, Select, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import AuthContext from '../../context/AuthenticatedUserContext'
 
-const Register = () => {
+const Register = ({ isAdmin }) => {
   const serviceUrl = `${process.env.REACT_APP_USER_SERVICE_URL}`
   const navigate = useNavigate();
   const [loading, setLoading] = useState()
+  const { userDetails } = useContext(AuthContext)
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -20,7 +22,8 @@ const Register = () => {
       confirmPassword: '',
       phoneNumber: '',
       dateOfBirth: '',
-      role: 1
+      role: 1,
+      companyDocument: isAdmin ? userDetails?.user?.companyDocument : ''
     }
   })
 
@@ -59,36 +62,44 @@ const Register = () => {
             overlayProps={{ radius: 'lg', blur: 2 }}
             loaderProps={{ color: 'blue', type: 'bars' }}
           />
-          <Paper shadow="xl" p="xl">
+          <Paper shadow="xl">
            
             <Stack>
-            <Group grow>
-              <TextInput {...form.getInputProps('name')} label='Nome completo' placeholder='Informe o seu nome' required withAsterisk/>
-              <TextInput {...form.getInputProps('username')} label='Usuário' placeholder='Informe o seu usuário'/>
-            </Group>
-            
+              <Group grow>
+                <TextInput {...form.getInputProps('name')} label='Nome completo' placeholder='Informe o seu nome' required withAsterisk/>
+              </Group>
 
-            <Group grow>
-               <TextInput {...form.getInputProps('dateOfBirth')} 
-                type={'date'} label='Data de nascimento' 
-                placeholder='Informe a sua data de nascimento'
-                required withAsterisk/>
+              <Group grow>
+                <TextInput {...form.getInputProps('username')} label='Usuário' placeholder='Informe o seu usuário'/>
+                {isAdmin ? 
+                  (<TextInput {...form.getInputProps('companyDocument')} label='Documento da Empresa' readOnly={true} />) : 
+                  (<TextInput {...form.getInputProps('companyDocument')} label='Documento da Empresa' placeholder='Informe o CNPJ'/>)
+                }
+              </Group>
+              
+              {isAdmin && <Select label='Permissão' data={[{value: '1', label: 'Default'}]}/>}
 
-              <TextInput {...form.getInputProps('phoneNumber')} type={'number'} label='Telefone' placeholder='Informe o seu telefone'/>
-            </Group>
-            
-            <TextInput {...form.getInputProps('email')} type={'email'} label='E-mail' placeholder='Informe o seu e-mail'/>
+              <Group grow>
+                <TextInput {...form.getInputProps('dateOfBirth')} 
+                  type={'date'} label='Data de nascimento' 
+                  placeholder='Informe a sua data de nascimento'
+                  required withAsterisk/>
 
-            <Group>
-              <TextInput {...form.getInputProps('password')} type={'password'} label='Senha' placeholder='Informe a sua senha' required withAsterisk/>
-              <TextInput {...form.getInputProps('confirmPassword')} type={'password'} label='Confirmar senha' placeholder='Confirme a sua senha' required withAsterisk/>
-            </Group>
+                <TextInput {...form.getInputProps('phoneNumber')} type={'number'} label='Telefone' placeholder='Informe o seu telefone'/>
+              </Group>
+              
+              <TextInput {...form.getInputProps('email')} type={'email'} label='E-mail' placeholder='Informe o seu e-mail'/>
 
-            <Group grow>
-              <Button>Cancelar</Button>
-              <Button style={{backgroundColor: 'green'}} type='submit'>Cadastrar</Button>
-            </Group>
-          </Stack>  
+              <Group grow>
+                <TextInput {...form.getInputProps('password')} type={'password'} label='Senha' placeholder='Informe a sua senha' required withAsterisk/>
+                <TextInput {...form.getInputProps('confirmPassword')} type={'password'} label='Confirmar senha' placeholder='Confirme a sua senha' required withAsterisk/>
+              </Group>
+
+              <Group grow>
+                <Button>Cancelar</Button>
+                <Button style={{backgroundColor: 'green'}} type='submit'>Cadastrar</Button>
+              </Group>
+            </Stack>  
           </Paper>
         </Box>
       </form>

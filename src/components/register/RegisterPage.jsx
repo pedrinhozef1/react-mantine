@@ -6,7 +6,7 @@ const RegisterPage = () => {
   return (
     <>
         <Center>
-            <Register />
+            <Register isAdmin={false} />
         </Center>
     </>
   )

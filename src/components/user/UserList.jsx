@@ -1,8 +1,10 @@
-import { ActionIcon, Group, Stack, Switch, Table, Text, Title } from '@mantine/core'
-import { IconAdOff, IconEye, IconRegistered, IconSquare, IconSquarePlus, IconTrash } from '@tabler/icons-react'
-import axios, { HttpStatusCode } from 'axios'
-import React, { useEffect, useState } from 'react'
+import { ActionIcon, Group, Stack, Switch, Table, Title } from '@mantine/core'
+import { IconEye,  IconSquarePlus, IconTrash } from '@tabler/icons-react'
+import axios from 'axios'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import AuthContext from '../../context/AuthenticatedUserContext'
+import UserModal from './UserModal'
 
 const UserList = () => {
     const serviceUrl = `${process.env.REACT_APP_USER_SERVICE_URL}/`
@@ -10,9 +12,12 @@ const UserList = () => {
     const [loading, setLoading] = useState([])
 
     const [userActive, setUserActive] = useState()
+    const [openModalCreateUser, setOpenModalCreateUser] = useState(false)
+
+    const { userDetails } = useContext(AuthContext)
 
     useEffect(() => {
-        axios.get(serviceUrl)
+        axios.get(`${serviceUrl}?companyDocument=${userDetails?.user?.companyDocument}`)
         .then((ress) => {
             setData(ress.data)
             console.log(ress.data)
@@ -33,9 +38,6 @@ const UserList = () => {
     }, [])
 
     const handleChangeStatus = (id, status) => {
-        console.log(status)
-        console.log(`mudando status... ${id} - ${status}`)
-
         setUserActive(status)
 
         axios.post(`${serviceUrl}change-status/${id}/${status}`)
@@ -62,8 +64,8 @@ const UserList = () => {
     }
 
     const rows = (
-        data.map((item) => (
-            <Table.Tr>
+        data.map((item, index) => (
+            <Table.Tr key={index}>
                 <Table.Td>{item.id}</Table.Td>
                 <Table.Td>{item.name}</Table.Td>
                 <Table.Td>{item.email}</Table.Td>
@@ -82,16 +84,19 @@ const UserList = () => {
                 </Table.Td>
             </Table.Tr>
         ))
-        
-        
     )
+
+    const handleOpenUserModal = () => {
+        console.log('Abrindo modal de usuario')
+        setOpenModalCreateUser(true)
+    }
 
   return (
     <div>
         <Stack>
             <Group>
                 <Title>Usuários cadastrados</Title>
-                <ActionIcon style={{background: 'None'}}>
+                <ActionIcon style={{background: 'None'}} onClick={() => handleOpenUserModal()}>
                     <IconSquarePlus  style={{color: '#00CED1'}}></IconSquarePlus>
                 </ActionIcon>
             </Group>
@@ -113,6 +118,8 @@ const UserList = () => {
                     </Table.Tbody>
                 </Table>
             </Group>
+
+            <UserModal open={openModalCreateUser} close={() => setOpenModalCreateUser(false)} />
             
         </Stack>
 

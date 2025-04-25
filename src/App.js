@@ -73,8 +73,8 @@ function App() {
                 </Popover.Target>
                 <Popover.Dropdown>
                   <List>
-                    {notifications.map((item) => (
-                      <ListItem>
+                    {notifications.map((item, index) => (
+                      <ListItem key={index}>
                         {item.id} - {item.text}
                       </ListItem>
                     ))}

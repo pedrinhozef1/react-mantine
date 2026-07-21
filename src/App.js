@@ -1,6 +1,6 @@
 import './App.css';
 import '@mantine/core/styles.css';
-import { ActionIcon, AppShell, Badge, Button, Collapse, createTheme, Group, List, ListItem, MantineProvider, Popover, Text } from '@mantine/core';
+import { ActionIcon, AppShell, Burger, Drawer, createTheme, Group, List, ListItem, MantineProvider, Popover } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ChangeTheme from './components/ChangeTheme';
@@ -27,7 +27,7 @@ function App() {
   });
 
   const [opened, { toggle }] = useDisclosure();
-  // const [notificationOpened, { toggleNotification }] = useDisclosure(true);
+  const [notificationOpened, { toggleNotification }] = useDisclosure(true);
 
   const {signed} = useContext(AuthContext)
 
@@ -58,36 +58,36 @@ function App() {
             header={{ height: 60 }}
             navbar={{ width: signed ? 200 : 0, breakpoint: signed ? 'sm' : null, collapsed: signed ? { mobile: !opened } : null }}
             padding="md"
-            // disabled={!isLogged}
+            // disabled={!signed}
           >
             <AppShell.Header>
               <Group h="100%" px="md" justify={'center'}>
-                {/* <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" /> */}
-                <ChangeTheme />
+                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                  <ChangeTheme />
 
-                <Popover width={200} position="bottom" withArrow shadow="md">
-                <Popover.Target>
-                    <ActionIcon>
+                  <Popover width={200} position="bottom" withArrow shadow="md">
+                    <Popover.Target>
+                      <ActionIcon>
                       <IconBell size={20}/>
-                    </ActionIcon>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <List>
-                    {notifications.map((item, index) => (
-                      <ListItem key={index}>
-                        {item.id} - {item.text}
-                      </ListItem>
-                    ))}
-                  </List>
-                </Popover.Dropdown>
-              </Popover>
+                      </ActionIcon>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                      <List>
+                        {notifications.map((item, index) => (
+                          <ListItem key={index}>
+                            {item.id} - {item.text}
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Popover.Dropdown>
+                  </Popover>
 
                
 
                 {!signed && (
                   <Group h="100%" px="md" justify={'center'}>
                     <NotLoggedNavbar />
-                  </Group>
+                </Group>
                   
                 )}
 
@@ -99,7 +99,7 @@ function App() {
                 <NavBar />
               </AppShell.Navbar>
             )}
-            
+
             <AppShell.Main>
               <ToastContainer />
               <Routes>

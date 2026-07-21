@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import AuthContext from '../../context/AuthenticatedUserContext'
 
 const LoginForm = ({isLogged}) => {
-    const serviceUrl = `${process.env.REACT_APP_AUTH_SERVICE_URL}`
     const navigate = useNavigate();
 
     const { login } = useContext(AuthContext)

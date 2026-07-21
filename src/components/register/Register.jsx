@@ -72,7 +72,7 @@ const Register = ({ isAdmin }) => {
               <Group grow>
                 <TextInput {...form.getInputProps('username')} label='Usuário' placeholder='Informe o seu usuário'/>
                 {isAdmin ? 
-                  (<TextInput {...form.getInputProps('companyDocument')} label='Documento da Empresa' readOnly={true} />) : 
+                  (<TextInput {...form.getInputProps('companyDocument')} label='Documento da Empresa' readOnly={false} />) : 
                   (<TextInput {...form.getInputProps('companyDocument')} label='Documento da Empresa' placeholder='Informe o CNPJ'/>)
                 }
               </Group>

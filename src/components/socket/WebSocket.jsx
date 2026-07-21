@@ -3,7 +3,7 @@ import SockJsClient from 'react-stomp';
 import { toast } from 'react-toastify';
 
 
-const SOCKET_URL = 'http://localhost:8081/api/manager/ws-message';
+const SOCKET_URL = `${process.env.REACT_APP_WEB_SOCKET_SERVICE_URL}`
 
 const WebSocket = () => {
     const [message, setMessage] = useState('You server message here.');
